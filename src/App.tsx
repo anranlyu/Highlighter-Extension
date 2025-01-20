@@ -1,39 +1,35 @@
 import { useEffect, useState } from 'react';
-
-export interface popupMessage {
-  action: string;
-  value: string;
-}
+import ToggleSwitch from './components/toggleSwitch';
+import { sendPopupMessage } from './services/sendPopupMessage';
 
 function App() {
   const [color, setColor] = useState('#2563eb');
   const [hight, setHight] = useState('20');
+  const [isEnabled, setEnable] = useState(false);
 
   useEffect(() => {
     console.log('useeffect is being called');
-    chrome.storage.local.get(['color', 'hight'], (data) => {
+    chrome.storage.local.get(['color', 'hight', 'isEnabled'], (data) => {
       if (data.color) setColor(data.color);
       if (data.hight) setHight(data.hight);
-      console.log(hight + color);
+      if (data.isEnabled) setEnable(data.isEnabled);
     });
   }, []);
 
   useEffect(() => {
     chrome.storage.local
-      .set({ color: color, hight: hight })
+      .set({ color: color, hight: hight, isEnabled: isEnabled })
       .then(() =>
         console.log(
-          `set color in local storage to ${color}, set hight in local storage to ${hight}`
+          `set color in local storage to ${color}, set hight in local storage to ${hight}, set isenabled in local storage to ${isEnabled}`
         )
       );
-  }, [color, hight]);
+  }, [color, hight, isEnabled]);
 
-  const sendPopupMessage = (m: popupMessage) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0].id !== undefined) {
-        chrome.tabs.sendMessage(tabs[0].id, m);
-      }
-    });
+  const handleCheckboxChange = () => {
+    console.log('Switch got clicked');
+    sendPopupMessage({ action: 'turn on/off highlight', value: !isEnabled });
+    setEnable(!isEnabled);
   };
 
   const handleColorInput = (event: React.FormEvent<HTMLInputElement>): void => {
@@ -60,6 +56,11 @@ function App() {
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Highlighter
         </h5>
+
+        <ToggleSwitch
+          handleCheckboxChange={handleCheckboxChange}
+          isEnabled={isEnabled}
+        />
 
         <label
           htmlFor="hs-color-input"

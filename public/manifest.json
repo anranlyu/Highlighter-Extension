@@ -2,7 +2,7 @@
   "version": "1.0.3",
   "manifest_version": 3,
   "name":"Highlighter",
-  "description": "A basic extension hightlight the line you are reading",
+  "description": "A extension hightlight the line you are reading",
   "action": {
     "default_popup": "popup.html"
   },

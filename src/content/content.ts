@@ -1,6 +1,7 @@
 console.log('content script has been injected');
 
-import { popupMessage } from '../App';
+
+import { popupMessage } from '../services/sendPopupMessage';
 import './content.css'
 // Create the highlight element
 const getOrCreateHighlightElement = () => {
@@ -13,9 +14,8 @@ const getOrCreateHighlightElement = () => {
   return highlightElement;
 };
 
-
-chrome.storage.local.get(['color', 'hight'], (result) => {
-    console.log(`get color:${result.color} and hight:${result.hight} from storage`);
+chrome.storage.local.get(['color', 'hight', 'isEnabled'], (result) => {
+    console.log(`get color:${result.color} and hight:${result.hight} and isEnabled:${result.isEnabled} from storage`);
     const highlightElement = getOrCreateHighlightElement();
 
     if (result.color) {
@@ -24,6 +24,10 @@ chrome.storage.local.get(['color', 'hight'], (result) => {
 
     if (result.hight) {
         highlightElement.style.height = `${result.hight}px`;
+    }
+
+    if (result.isEnabled !== undefined) {
+        highlightElement.style.visibility = result.isEnabled ?  'visible' : 'hidden';
     }
 });
 
@@ -53,15 +57,20 @@ document.addEventListener('mouseleave', () => {
 });
 
 chrome.runtime.onMessage.addListener(({ action, value }: popupMessage, sender) => {
-    const highlight = getOrCreateHighlightElement();
+    const highlightElement = getOrCreateHighlightElement();
     console.log(`content script get ${value} from ${sender}`)
     if (action === 'setColor' && value) {
-        highlight.style.backgroundColor = hexToRgba(value, 0.4);
+        highlightElement.style.backgroundColor = hexToRgba(value as string, 0.4);
         console.log(`Highlight color changed to ${value}`);
     }
     if (action === 'setHight' && value) {
-        highlight.style.height = `${value}px`
-        console.log(`Highlight hight changed to ${highlight.style.height}`);
+        highlightElement.style.height = `${value}px`
+        console.log(`Highlight hight changed to ${highlightElement.style.height}`);
+    }
+    if (action === 'turn on/off highlight') {
+        highlightElement.style.visibility = value ?  'visible' : 'hidden';
+        
+        console.log('get toggle switch message')
     }
 })
 
