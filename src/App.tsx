@@ -1,11 +1,32 @@
+import { useEffect, useState } from 'react';
+
 export interface popupMessage {
   action: string;
   value: string;
 }
 
 function App() {
-  // const [color, setColor] = useState('#2563eb');
-  // const [hight, setHight] = useState('20');
+  const [color, setColor] = useState('#2563eb');
+  const [hight, setHight] = useState('20');
+
+  useEffect(() => {
+    console.log('useeffect is being called');
+    chrome.storage.local.get(['color', 'hight'], (data) => {
+      if (data.color) setColor(data.color);
+      if (data.hight) setHight(data.hight);
+      console.log(hight + color);
+    });
+  }, []);
+
+  useEffect(() => {
+    chrome.storage.local
+      .set({ color: color, hight: hight })
+      .then(() =>
+        console.log(
+          `set color in local storage to ${color}, set hight in local storage to ${hight}`
+        )
+      );
+  }, [color, hight]);
 
   const sendPopupMessage = (m: popupMessage) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -17,6 +38,7 @@ function App() {
 
   const handleColorInput = (event: React.FormEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
+    setColor(target.value);
     sendPopupMessage({
       action: 'setColor',
       value: target.value,
@@ -25,7 +47,7 @@ function App() {
 
   const handleHightInput = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
-
+    setHight(target.value);
     sendPopupMessage({
       action: 'setHight',
       value: target.value,
@@ -49,7 +71,7 @@ function App() {
           type="color"
           className="p-1 h-10 w-full block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
           id="hs-color-input"
-          value={'#2563eb'}
+          value={color}
           title="Choose your color"
           onInput={handleColorInput}
         />
@@ -64,7 +86,8 @@ function App() {
           id="number-input"
           aria-describedby="helper-text-explanation"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder={'20'}
+          placeholder={hight}
+          value={hight}
           onInput={handleHightInput}
         />
       </div>
