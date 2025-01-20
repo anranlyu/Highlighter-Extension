@@ -1,0 +1,28 @@
+{
+  "version": "1.0.3",
+  "manifest_version": 3,
+  "name":"Highlighter",
+  "description": "A basic extension hightlight the line you are reading",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+   "content_scripts": [
+    {
+      "js": ["assets/contentScript.js"],
+      "css":["assets/contentScript.css"],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ]
+}

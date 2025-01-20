@@ -1,0 +1,13 @@
+.highlight {
+    position: absolute;
+    /* css:absolute */
+    width: 100%;
+    /* w-full */
+    height: 20px;
+    /* h-[20px] */
+    background-color: rgba(253, 230, 138, 0.5);
+    /* bg-yellow-200/50 */
+    pointer-events: none;
+    /* pointer-events-none */
+    z-index: 9999;
+}
