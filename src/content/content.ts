@@ -27,11 +27,15 @@ document.addEventListener('mouseleave', () => {
     console.log('mouseleave')
 });
 
-chrome.runtime.onMessage.addListener((message: popupMessage, sender) => {
-    console.log(`content script get message from ${sender}`)
-    if (message.action === 'setHighlightColor' && message.value) {
-        highlight.style.backgroundColor = hexToRgba(message.value, 0.4);
-        console.log(`Highlight color changed to ${message.value}`);
+chrome.runtime.onMessage.addListener(({action, value}: popupMessage, sender) => {
+    console.log(`content script get ${value} from ${sender}`)
+    if (action === 'setColor' && value) {
+        highlight.style.backgroundColor = hexToRgba(value, 0.4);
+        console.log(`Highlight color changed to ${value}`);
+    }
+    if (action === 'setHight' && value) {
+        highlight.style.height = `${value}px`
+        console.log(`Highlight hight changed to ${highlight.style.height}`);
     }
 })
 
