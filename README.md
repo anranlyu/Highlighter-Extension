@@ -4,5 +4,5 @@ This extension highlights the line you're reading. It's built with React and Typ
 
 ## Demonstration Video
 
-https://github.com/user-attachments/assets/15d633a0-c1ef-4a7f-8475-472bb11fe082
+https://github.com/user-attachments/assets/f43661c4-95c3-4f9f-bcf1-9eacfc0022f9
 
