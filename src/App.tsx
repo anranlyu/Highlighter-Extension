@@ -4,27 +4,27 @@ import { sendPopupMessage } from './services/sendPopupMessage';
 
 function App() {
   const [color, setColor] = useState('#2563eb');
-  const [hight, setHight] = useState('20');
+  const [height, setHeight] = useState('20');
   const [isEnabled, setEnable] = useState(false);
 
   useEffect(() => {
     console.log('useeffect is being called');
-    chrome.storage.local.get(['color', 'hight', 'isEnabled'], (data) => {
+    chrome.storage.local.get(['color', 'height', 'isEnabled'], (data) => {
       if (data.color) setColor(data.color);
-      if (data.hight) setHight(data.hight);
+      if (data.height) setHeight(data.height);
       if (data.isEnabled) setEnable(data.isEnabled);
     });
   }, []);
 
   useEffect(() => {
     chrome.storage.local
-      .set({ color: color, hight: hight, isEnabled: isEnabled })
+      .set({ color: color, height: height, isEnabled: isEnabled })
       .then(() =>
         console.log(
-          `set color in local storage to ${color}, set hight in local storage to ${hight}, set isenabled in local storage to ${isEnabled}`
+          `set color in local storage to ${color}, set height in local storage to ${height}, set isenabled in local storage to ${isEnabled}`
         )
       );
-  }, [color, hight, isEnabled]);
+  }, [color, height, isEnabled]);
 
   const handleCheckboxChange = () => {
     console.log('Switch got clicked');
@@ -43,9 +43,9 @@ function App() {
 
   const handleHightInput = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
-    setHight(target.value);
+    setHeight(target.value);
     sendPopupMessage({
-      action: 'setHight',
+      action: 'setHeight',
       value: target.value,
     });
     target.placeholder = target.value;
@@ -80,15 +80,15 @@ function App() {
           htmlFor="number-input"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
-          Hight:
+          Height:
         </label>
         <input
           type="number"
           id="number-input"
           aria-describedby="helper-text-explanation"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder={hight}
-          value={hight}
+          placeholder={height}
+          value={height}
           onInput={handleHightInput}
         />
       </div>

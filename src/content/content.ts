@@ -14,16 +14,16 @@ const getOrCreateHighlightElement = () => {
   return highlightElement;
 };
 
-chrome.storage.local.get(['color', 'hight', 'isEnabled'], (result) => {
-    console.log(`get color:${result.color} and hight:${result.hight} and isEnabled:${result.isEnabled} from storage`);
+chrome.storage.local.get(['color', 'height', 'isEnabled'], (result) => {
+    console.log(`get color:${result.color} and height:${result.height} and isEnabled:${result.isEnabled} from storage`);
     const highlightElement = getOrCreateHighlightElement();
 
     if (result.color) {
         highlightElement.style.backgroundColor = hexToRgba(result.color, 0.4);
     }
 
-    if (result.hight) {
-        highlightElement.style.height = `${result.hight}px`;
+    if (result.height) {
+        highlightElement.style.height = `${result.height}px`;
     }
 
     if (result.isEnabled !== undefined) {
@@ -35,13 +35,13 @@ chrome.storage.local.get(['color', 'hight', 'isEnabled'], (result) => {
 document.addEventListener('mousemove', (event) => {
     const highlight = getOrCreateHighlightElement();
 
-    const hight = +highlight.style.height.slice(0, -2);
+    const height = +highlight.style.height.slice(0, -2);
 
 
     const { clientY } = event;
 
     // Account for scroll position to ensure correct placement
-    const topPosition = clientY + window.scrollY -hight/2;
+    const topPosition = clientY + window.scrollY -height/2;
 
     // Set the position of the highlight line
     highlight.style.top = `${topPosition}px`;
@@ -63,9 +63,9 @@ chrome.runtime.onMessage.addListener(({ action, value }: popupMessage, sender) =
         highlightElement.style.backgroundColor = hexToRgba(value as string, 0.4);
         console.log(`Highlight color changed to ${value}`);
     }
-    if (action === 'setHight' && value) {
+    if (action === 'setHeight' && value) {
         highlightElement.style.height = `${value}px`
-        console.log(`Highlight hight changed to ${highlightElement.style.height}`);
+        console.log(`Highlight height changed to ${highlightElement.style.height}`);
     }
     if (action === 'turn on/off highlight') {
         highlightElement.style.visibility = value ?  'visible' : 'hidden';
